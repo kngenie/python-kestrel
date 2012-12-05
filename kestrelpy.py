@@ -420,6 +420,11 @@ class _Host(object):
         self.socket_timeout = socket_timeout
         self.debug = debug
 
+        if isinstance(host, tuple):
+            weight = int(host[1]) if len(host) > 1 else 1
+            host = host[0]
+        else:
+            weight = 1
         #  parse the connection string
         m = re.match(r'^(?P<proto>unix):(?P<path>.*)$', host)
         if not m:
@@ -438,6 +443,8 @@ class _Host(object):
             self.ip = hostData['host']
             self.port = int(hostData.get('port', 11211))
             self.address = ( self.ip, self.port )
+
+        self.weight = weight
 
         self.socket = None
 
